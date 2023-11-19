@@ -19,7 +19,7 @@ tSet set_by_index(const tSet set, int index, bool value) {
 	tSet set2 = set;
 
 	set2.value &= ~(1 << index);
-	set2.value |= ((1 ? value : 0) << index);
+	set2.value |= ((value ? 1 : 0) << index);
 
 	return set2;
 }
@@ -36,14 +36,14 @@ tWord word_empty() {
 	return s;
 }
 
-bool words_good_and_equals(const tWord* a, const tWord* b) {
+bool words_good_and_not_equals(const tWord* a, const tWord* b) {
 	if (a->badWord)
 		return false;
 
 	if (b->badWord)
 		return false;
 
-	return set_equals(&(a->symbols), &(b->symbols));
+	return !set_equals(&(a->symbols), &(b->symbols));
 }
 
 
@@ -55,7 +55,7 @@ bool isDelimiter(char symbol) {
 
 
 int main() {
-	tWord lastWord = { 0, 0, 0 };
+	tWord lastWord = { 0, 0, true };
 	tWord word = { 0, 0, 0 };
 
 	long long count = 0;
@@ -70,7 +70,7 @@ int main() {
 				continue;
 			}
 
-			if (words_good_and_equals(&lastWord, &word)) {
+			if (words_good_and_not_equals(&lastWord, &word)) {
 				count++;
 			}
 
@@ -92,10 +92,11 @@ int main() {
 		}
 	}
 
-	if (words_good_and_equals(&lastWord, &word)) {
+	if (words_good_and_not_equals(&lastWord, &word)) {
 		count++;
 	}
 
+    // printf("Result: %lli\n", count);
 
-	printf("Result: %lli\n", count);
+	printf("Result: %s\n", count == 0 ? "not found" : "found");
 }
